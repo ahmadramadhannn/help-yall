@@ -1,10 +1,15 @@
+using Microsoft.EntityFrameworkCore.Sqlite;
 using HelpYAll.Components;
+using HelpYAll.Data.AppDbContext;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContextFactory<AppDbContext>(opts => opts.UseSqlite("Data Source=app.db"));
 
 var app = builder.Build();
 

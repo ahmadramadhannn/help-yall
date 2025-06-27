@@ -1,0 +1,53 @@
+@page "/todo"
+@rendermode InteractiveServer
+@using HelpYAll.Data.AppDbContext
+@using HelpYAll.Model.Todo
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<AppDbContext> DbContextFactory
+
+<PageTitle>Todo</PageTitle>
+
+
+@if (todos is null)
+{
+    <h1>empty todos</h1>
+}
+else
+{
+    @foreach (var todo in todos)
+    {
+        <p>@todo.Text</p>
+    }
+}
+
+<input @bind="Text" placeholder="your todo" />
+
+<button @onmousedown="async () => { await CreateTodo(Text); }">create todo</button>
+
+
+@code {
+    private List<Todo>? todos { get; set; }
+    private string? Text { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var context = DbContextFactory.CreateDbContext();
+
+        if (context is not null)
+        {
+            todos = context.Todos.ToList();
+        }
+    }
+
+    protected async Task CreateTodo(string text)
+    {
+        var context = DbContextFactory.CreateDbContext();
+
+        if (context is not null)
+        {
+            var todo = new Todo { Text = text, IsDone = false };
+            await context.Todos.AddAsync(todo);
+            await context.SaveChangesAsync();
+        }
+    }
+}

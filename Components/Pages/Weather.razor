@@ -1,5 +1,9 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
+@using HelpYAll.Model.Todo
+@using HelpYAll.Data.AppDbContext
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<AppDbContext> DbContextFactory
 
 <PageTitle>Weather</PageTitle>
 
@@ -44,8 +48,13 @@ else
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 
+        {
+
+        }
+
         var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering",
+"Scorching" };
         forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = startDate.AddDays(index),
