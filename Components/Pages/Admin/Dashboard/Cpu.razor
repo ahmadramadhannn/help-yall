@@ -1,0 +1,116 @@
+@page "/admin/dashboard/cpu"
+@rendermode InteractiveServer
+@using HelpYAll.Data.AppDbContext
+@using Microsoft.EntityFrameworkCore
+@layout DashboardLayout
+@inject ILogger<Cpu> Logger
+@inject IDbContextFactory<AppDbContext> DbContextFactory
+
+<PageTitle>dashboard cpu</PageTitle>
+
+<h2>list of cpus</h2>
+
+@foreach (var cpu in Cpus)
+{
+    <p>codename : @cpu.CodeName</p>
+    <p>cores : @cpu.Cores</p>
+    <p>threads : @cpu.Threads</p>
+}
+
+
+<form method="post" @onsubmit="Submit" @formname="cpu-form">
+    <div>
+        <div>
+            <label>
+                codename
+            </label>
+            <InputText @bind-Value="CodeName" />
+        </div>
+        <div>
+            <label>
+                tdp
+            </label>
+            <input type="text" @bind="Tdp" placeholder="tdp" />
+        </div>
+        <div>
+            <label>
+                cores
+            </label>
+            <input type="text" @bind="Cores" placeholder="cores" />
+        </div>
+        <div>
+            <label>
+                threads
+            </label>
+            <input type="text" @bind="Threads" placeholder="threads" />
+        </div>
+        <div>
+            <label>
+                socket
+            </label>
+            <input type="text" @bind="Socket" placeholder="socket" />
+        </div>
+        <div>
+            <label>
+                baseclock
+            </label>
+            <input type="text" @bind="BaseClock" placeholder="baseclock" />
+        </div>
+        <div>
+            <label>
+                boostclock
+            </label>
+            <input type="text" @bind="BoostClock" placeholder="boostclock" />
+        </div>
+    </div>
+    <div>
+        <AntiforgeryToken />
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@code {
+
+    private List<HelpYAll.Model.Cpu.Cpu>? Cpus { get; set; }
+
+    private int Tdp { get; set; }
+    private int Cores { get; set; }
+    private int Threads { get; set; }
+    private int Socket { get; set; }
+    private decimal BaseClock { get; set; }
+    private decimal BoostClock { get; set; }
+    private string? CodeName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var context = DbContextFactory.CreateDbContext();
+
+        if (context is not null)
+        {
+            Cpus = context.Cpus.ToList();
+        }
+    }
+
+    private void Submit()
+    {
+        var context = DbContextFactory.CreateDbContext();
+
+        if (context is not null)
+        {
+            var cpu = new HelpYAll.Model.Cpu.Cpu
+            {
+                Tdp = Tdp,
+                Cores = Cores,
+                Threads = Threads,
+                Socket = Socket,
+                BaseClock =
+            BaseClock,
+                BoostClock = BoostClock,
+                CodeName = CodeName!
+            };
+
+            context.Add(cpu);
+            context.SaveChanges();
+        }
+    }
+}

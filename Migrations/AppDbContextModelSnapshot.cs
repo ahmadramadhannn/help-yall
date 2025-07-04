@@ -16,6 +16,39 @@ namespace HelpYAll.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
 
+            modelBuilder.Entity("HelpYAll.Model.Cpu.Cpu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("BaseClock")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("BoostClock")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CodeName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Cores")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Socket")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Tdp")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Threads")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cpus");
+                });
+
             modelBuilder.Entity("HelpYAll.Model.Todo.Todo", b =>
                 {
                     b.Property<int>("Id")

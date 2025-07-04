@@ -20,9 +20,11 @@ else
     }
 }
 
-<input @bind="Text" placeholder="your todo" />
-
-<button @onmousedown="async () => { await CreateTodo(Text); }">create todo</button>
+<form @onsubmit="Submit" @formname="todo-form">
+    <AntiforgeryToken />
+    <InputText @bind-Value="Text" />
+    <button type="submit">Submit</button>
+</form>
 
 
 @code {
@@ -39,15 +41,17 @@ else
         }
     }
 
-    protected async Task CreateTodo(string text)
+
+    protected void Submit()
     {
         var context = DbContextFactory.CreateDbContext();
 
         if (context is not null)
         {
-            var todo = new Todo { Text = text, IsDone = false };
-            await context.Todos.AddAsync(todo);
-            await context.SaveChangesAsync();
+            var todo = new Todo { Text = Text, IsDone = false };
+            context.Todos.Add(todo);
+            todos!.Add(todo);
+            context.SaveChanges();
         }
     }
 }
